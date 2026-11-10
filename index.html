@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mesada+</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f7f4;--card:#fff;--ink:#1c2b24;--mute:#6b7c73;--g:#14a36b;--g2:#0e7c52;--gl:#e3f6ec;--r:#e0533d;--rl:#fdeae6;--y:#f5b623;--line:#e3ebe6}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Nunito,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:84px;min-height:100vh}
+header{background:linear-gradient(135deg,var(--g),var(--g2));color:#fff;padding:22px 20px 60px;border-radius:0 0 28px 28px}
+header .logo{font-weight:900;font-size:22px;letter-spacing:-.5px}
+header .logo span{color:#c6f7dd}
+header .sub{opacity:.85;font-size:14px;margin-top:2px}
+main{max-width:520px;margin:-44px auto 0;padding:0 16px}
+.card{background:var(--card);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(20,60,40,.06)}
+h2{font-size:17px;font-weight:800;margin-bottom:10px}
+.big{font-size:34px;font-weight:900;letter-spacing:-1px}
+.mute{color:var(--mute);font-size:13px}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700}
+label{display:block;font-size:13px;font-weight:700;color:var(--mute);margin:10px 0 4px}
+input,select{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:12px;font:inherit;font-size:16px;background:#fff;color:var(--ink)}
+input:focus,select:focus{outline:none;border-color:var(--g)}
+button{font:inherit;cursor:pointer;border:none}
+.btn{width:100%;padding:13px;border-radius:14px;background:var(--g);color:#fff;font-weight:800;font-size:16px;margin-top:12px}
+.btn.out{background:var(--gl);color:var(--g2)}
+.btn.red{background:var(--rl);color:var(--r)}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom));z-index:5}
+.tabs button{flex:1;background:none;padding:6px 0;font-size:11px;font-weight:700;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:2px}
+.tabs button .i{font-size:21px}
+.tabs button.on{color:var(--g)}
+.view{display:none}.view.on{display:block}
+.bar{height:12px;background:var(--gl);border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.bar>div{height:100%;background:var(--g);border-radius:99px;transition:width .4s}
+.item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:none}
+.ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;flex:none}
+.item .t{flex:1;min-width:0}
+.item .t b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .v{font-weight:800}
+.plus{color:var(--g)}.minus{color:var(--r)}
+.x{background:none;color:#b7c4bd;font-size:18px;padding:4px}
+.seg{display:flex;background:var(--gl);border-radius:12px;padding:4px;gap:4px}
+.seg button{flex:1;padding:9px;border-radius:9px;background:none;font-weight:800;color:var(--g2)}
+.seg button.on{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.seg.r button.on{color:var(--r)}
+.res{display:grid;grid-template-columns:1fr;gap:8px;margin-top:14px}
+.resb{border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+.resb b{font-size:19px;font-weight:900}
+svg text{font-family:Nunito}
+.empty{text-align:center;color:var(--mute);padding:16px 0;font-size:14px}
+.quizopt{display:block;width:100%;text-align:left;padding:12px 14px;border-radius:12px;background:var(--bg);margin-top:8px;font-weight:700;font-size:15px;color:var(--ink)}
+.quizopt.ok{background:var(--gl);color:var(--g2)}
+.quizopt.no{background:var(--rl);color:var(--r)}
+.tip{background:#fff7e0;border-radius:14px;padding:12px 14px;font-size:14px;margin-top:10px}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:99px;font-weight:700;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:9}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.chips button{padding:7px 11px;border-radius:99px;background:var(--bg);font-weight:700;font-size:13px;color:var(--ink)}
+.chips button.on{background:var(--g);color:#fff}
+
+.gear{background:rgba(255,255,255,.18);border-radius:14px;width:42px;height:42px;font-size:20px;color:#fff}
+.langs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lang{display:flex;align-items:center;gap:10px;padding:14px;border-radius:14px;background:var(--bg);font-weight:800;font-size:15px;color:var(--ink);border:2px solid transparent;text-align:left}
+.lang span{font-size:24px}
+.lang.on{border-color:var(--g);background:var(--gl);color:var(--g2)}
+.row>div{display:flex;flex-direction:column;justify-content:flex-end}
+</style>
+</head>
+<body>
+<header>
+  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <div>
+      <div class="logo">Mesada<span>+</span></div>
+      <div class="sub" data-t="sub"></div>
+    </div>
+    <button class="gear" id="gear" aria-label="settings">⚙️</button>
+  </div>
+</header>
+<main>
+
+<section class="view on" id="v-home">
+  <div class="card">
+    <div class="mute" data-t="balance"></div>
+    <div class="big" id="saldo"></div>
+    <div class="row" style="margin-top:12px">
+      <div><span class="pill" style="background:var(--gl);color:var(--g2)" data-t="in"></span><div style="font-weight:800;margin-top:4px" id="tin"></div></div>
+      <div><span class="pill" style="background:var(--rl);color:var(--r)" data-t="out"></span><div style="font-weight:800;margin-top:4px" id="tout"></div></div>
+      <div><span class="pill" style="background:#fff3d6;color:#a87500" data-t="saved"></span><div style="font-weight:800;margin-top:4px" id="tsave"></div></div>
+    </div>
+  </div>
+  <div class="card"><h2 data-t="whereMoney"></h2><div id="cats"></div></div>
+  <div class="card"><h2 data-t="mainGoal"></h2><div id="mainGoal"></div></div>
+  <div class="card"><h2 data-t="tipDay"></h2><div id="dica" style="font-size:15px"></div></div>
+</section>
+
+<section class="view" id="v-mov">
+  <div class="card">
+    <h2 data-t="register"></h2>
+    <div class="seg" id="tipoSeg">
+      <button class="on" data-tp="in" data-t="entry"></button>
+      <button data-tp="out" data-t="expense"></button>
+    </div>
+    <label data-t="amount"></label>
+    <input id="mVal" type="number" inputmode="decimal" placeholder="50">
+    <label data-t="desc"></label>
+    <input id="mDesc" data-ph="descPh">
+    <label data-t="category"></label>
+    <div class="chips" id="mCats"></div>
+    <button class="btn" id="mAdd" data-t="add"></button>
+  </div>
+  <div class="card"><h2 data-t="history"></h2><div id="movList"></div></div>
+</section>
+
+<section class="view" id="v-goals">
+  <div class="card">
+    <h2 data-t="newGoal"></h2>
+    <label data-t="whatWant"></label>
+    <input id="gName" data-ph="goalPh">
+    <div class="row">
+      <div><label data-t="cost"></label><input id="gVal" type="number" inputmode="decimal" placeholder="1500"></div>
+      <div><label data-t="months"></label><input id="gMon" type="number" inputmode="numeric" placeholder="8"></div>
+    </div>
+    <div class="tip" id="gHint" style="display:none"></div>
+    <button class="btn" id="gAdd" data-t="createGoal"></button>
+  </div>
+  <div id="goalList"></div>
+</section>
+
+<section class="view" id="v-sim">
+  <div class="card">
+    <h2 data-t="simTitle"></h2>
+    <div class="row">
+      <div><label data-t="perMonth"></label><input id="sMes" type="number" inputmode="decimal" value="50"></div>
+      <div><label data-t="years"></label><input id="sAnos" type="number" inputmode="numeric" value="5"></div>
+    </div>
+    <div class="row">
+      <div><label data-t="savingsRate"></label><input id="sPoup" type="number" inputmode="decimal" value="7" step="0.1"></div>
+      <div><label data-t="selicRate"></label><input id="sTes" type="number" inputmode="decimal" value="12" step="0.1"></div>
+    </div>
+    <div class="mute" style="margin-top:6px" data-t="ratesNote"></div>
+    <div class="res" id="sRes"></div>
+  </div>
+  <div class="card">
+    <h2 data-t="growth"></h2>
+    <div id="chart"></div>
+    <div class="row mute" style="margin-top:8px;font-size:12px;flex-wrap:wrap;gap:12px">
+      <span><b style="color:#9aa8a0">●</b> <span data-t="piggy"></span></span>
+      <span><b style="color:var(--y)">●</b> <span data-t="savings"></span></span>
+      <span><b style="color:var(--g)">●</b> <span data-t="selic"></span></span>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="v-learn">
+  <div class="card"><h2 data-t="quizTitle"></h2><div class="mute" id="qProg"></div><div id="quiz"></div></div>
+  <div class="card"><h2 data-t="dict"></h2><div id="dic"></div></div>
+</section>
+
+<section class="view" id="v-set">
+  <button class="btn out" id="setBack" style="margin:0 0 14px;width:auto;padding:10px 16px" data-t="back"></button>
+  <div class="card">
+    <h2 data-t="language"></h2>
+    <div class="langs" id="langs"></div>
+    <div class="mute" style="margin-top:10px" data-t="langNote"></div>
+  </div>
+  <div class="card">
+    <h2 data-t="myData"></h2>
+    <button class="btn red" id="reset" style="margin-top:0" data-t="reset"></button>
+    <div id="resetConfirm" style="display:none">
+      <div class="tip" data-t="resetSure"></div>
+      <div class="row"><button class="btn out" id="resetNo" data-t="cancel"></button><button class="btn red" id="resetYes" data-t="del"></button></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<nav class="tabs">
+  <button class="on" data-v="home"><span class="i">🏠</span><span data-t="tHome"></span></button>
+  <button data-v="mov"><span class="i">💸</span><span data-t="tMov"></span></button>
+  <button data-v="goals"><span class="i">🎯</span><span data-t="tGoals"></span></button>
+  <button data-v="sim"><span class="i">📈</span><span data-t="tSim"></span></button>
+  <button data-v="learn"><span class="i">🧠</span><span data-t="tLearn"></span></button>
+</nav>
+<div class="toast" id="toast"></div>
+<script>
+const LANGS={pt:{flag:"🇧🇷",name:"Português",loc:"pt-BR"},en:{flag:"🇺🇸",name:"English",loc:"en-US"},es:{flag:"🇪🇸",name:"Español",loc:"es-ES"},de:{flag:"🇩🇪",name:"Deutsch",loc:"de-DE"}};
+const T={
+pt:{
+ sub:"Seu dinheiro, do seu jeito 💚",balance:"Saldo disponível",in:"⬆ Entrou",out:"⬇ Saiu",saved:"🎯 Guardado",
+ whereMoney:"Pra onde foi o dinheiro",mainGoal:"Minha meta principal",tipDay:"💡 Dica do dia",noSpend:"Nenhum gasto ainda",
+ createGoalHint:"Crie uma meta na aba 🎯 Metas",register:"Registrar",entry:"+ Entrada",expense:"− Gasto",amount:"Valor (R$)",
+ desc:"Descrição",descPh:"Ex: Mesada de novembro",category:"Categoria",add:"Adicionar",history:"Histórico",nothingYet:"Nada registrado ainda",
+ newGoal:"Nova meta",whatWant:"O que você quer?",goalPh:"Ex: Celular novo",cost:"Quanto custa (R$)",months:"Em quantos meses",
+ createGoal:"Criar meta",noGoals:"Nenhuma meta ainda",simTitle:"Quanto meu dinheiro vira?",perMonth:"Guardo por mês (R$)",
+ years:"Por quantos anos",savingsRate:"Poupança (% ao ano)",selicRate:"Tesouro Selic (% ao ano)",
+ ratesNote:"As taxas são exemplos. Confira as atuais no site do Tesouro Direto e ajuste aqui.",growth:"Crescimento ano a ano",
+ piggy:"Cofrinho",savings:"Poupança",selic:"Tesouro Selic",noYield:"sem render nada",interest:"de juros",
+ pocket:c=>`Você colocou ${c} do seu bolso. *Antes do imposto de renda e taxas.`,yr:"a",
+ quizTitle:"Quiz do dinheiro 🧠",dict:"Mini-dicionário",reset:"Apagar todos os meus dados",
+ resetSure:"Tem certeza? Isso apaga entradas, gastos e metas.",cancel:"Cancelar",del:"Apagar",
+ tHome:"Início",tMov:"Mesada",tGoals:"Metas",tSim:"Simular",tLearn:"Aprender",
+ settings:"Configurações",language:"Idioma",langNote:"O app inteiro muda de idioma, inclusive o quiz e as dicas.",myData:"Meus dados",back:"← Voltar",
+ typeValue:"Digite um valor",entryOk:"Entrada registrada 💚",expenseOk:"Gasto registrado",fill3:"Preencha os 3 campos",
+ goalCreated:"Meta criada 🎯",goalDone:"🎉 Meta concluída!",savedOk:"Guardado! 💚",goalRemoved:"Meta removida",dataDeleted:"Dados apagados",langChanged:"Idioma: Português",
+ of:"de",left:(p,f,m,n)=>`${p}% · faltam ${f} · ${m}/mês nos próximos ${n} meses`,
+ needSave:(a,b)=>`Você precisa guardar <b>${a} por mês</b> (uns ${b} por semana).`,saveBtn:"Guardar",savedPrefix:"Guardado: ",
+ qProg:(i,n,s)=>`Perguntas de hoje · ${i} de ${n} · ${s} acertos`,perfect:"Perfeito! Você manja de dinheiro 🏆",good:"Mandou bem! 💚",
+ tryAgain:"Bora tentar de novo?",tomorrow:"Amanhã tem perguntas novas!",playAgain:"Jogar de novo",next:"Próxima",result:"Ver resultado",
+ right:"✅ Isso!",almost:"❌ Quase.",
+ cats:{mesada:"Mesada",trabalho:"Trabalho",presente:"Presente",outro_in:"Outro",comida:"Comida",jogos:"Jogos",roupa:"Roupa",escola:"Escola",transporte:"Transporte",meta:"Guardar p/ meta",outro:"Outro"}
+},
+en:{
+ sub:"Your money, your way 💚",balance:"Available balance",in:"⬆ In",out:"⬇ Out",saved:"🎯 Saved",
+ whereMoney:"Where the money went",mainGoal:"My main goal",tipDay:"💡 Tip of the day",noSpend:"No expenses yet",
+ createGoalHint:"Create a goal in the 🎯 Goals tab",register:"Add",entry:"+ Income",expense:"− Expense",amount:"Amount (R$)",
+ desc:"Description",descPh:"E.g. November allowance",category:"Category",add:"Add",history:"History",nothingYet:"Nothing added yet",
+ newGoal:"New goal",whatWant:"What do you want?",goalPh:"E.g. New phone",cost:"How much it costs (R$)",months:"In how many months",
+ createGoal:"Create goal",noGoals:"No goals yet",simTitle:"How much will my money grow?",perMonth:"I save per month (R$)",
+ years:"For how many years",savingsRate:"Savings (% per year)",selicRate:"Tesouro Selic (% per year)",
+ ratesNote:"These rates are examples. Check the current ones on the Tesouro Direto website and adjust them here.",growth:"Growth year by year",
+ piggy:"Piggy bank",savings:"Savings account",selic:"Tesouro Selic",noYield:"no interest",interest:"in interest",
+ pocket:c=>`You put in ${c} of your own money. *Before income tax and fees.`,yr:"y",
+ quizTitle:"Money quiz 🧠",dict:"Mini dictionary",reset:"Delete all my data",
+ resetSure:"Are you sure? This deletes income, expenses and goals.",cancel:"Cancel",del:"Delete",
+ tHome:"Home",tMov:"Allowance",tGoals:"Goals",tSim:"Simulate",tLearn:"Learn",
+ settings:"Settings",language:"Language",langNote:"The whole app changes language, including the quiz and tips.",myData:"My data",back:"← Back",
+ typeValue:"Enter an amount",entryOk:"Income added 💚",expenseOk:"Expense added",fill3:"Fill in all 3 fields",
+ goalCreated:"Goal created 🎯",goalDone:"🎉 Goal reached!",savedOk:"Saved! 💚",goalRemoved:"Goal removed",dataDeleted:"Data deleted",langChanged:"Language: English",
+ of:"of",left:(p,f,m,n)=>`${p}% · ${f} to go · ${m}/month for the next ${n} months`,
+ needSave:(a,b)=>`You need to save <b>${a} per month</b> (about ${b} per week).`,saveBtn:"Save",savedPrefix:"Saved: ",
+ qProg:(i,n,s)=>`Today's questions · ${i} of ${n} · ${s} correct`,perfect:"Perfect! You know your money 🏆",good:"Nice job! 💚",
+ tryAgain:"Want to try again?",tomorrow:"New questions tomorrow!",playAgain:"Play again",next:"Next",result:"See result",
+ right:"✅ Correct!",almost:"❌ Not quite.",
+ cats:{mesada:"Allowance",trabalho:"Work",presente:"Gift",outro_in:"Other",comida:"Food",jogos:"Games",roupa:"Clothes",escola:"School",transporte:"Transport",meta:"Save for goal",outro:"Other"}
+},
+es:{
+ sub:"Tu dinero, a tu manera 💚",balance:"Saldo disponible",in:"⬆ Entró",out:"⬇ Salió",saved:"🎯 Ahorrado",
+ whereMoney:"A dónde fue el dinero",mainGoal:"Mi meta principal",tipDay:"💡 Consejo del día",noSpend:"Aún no hay gastos",
+ createGoalHint:"Crea una meta en la pestaña 🎯 Metas",register:"Registrar",entry:"+ Ingreso",expense:"− Gasto",amount:"Valor (R$)",
+ desc:"Descripción",descPh:"Ej.: Mesada de noviembre",category:"Categoría",add:"Añadir",history:"Historial",nothingYet:"Aún no hay nada registrado",
+ newGoal:"Nueva meta",whatWant:"¿Qué quieres?",goalPh:"Ej.: Móvil nuevo",cost:"Cuánto cuesta (R$)",months:"En cuántos meses",
+ createGoal:"Crear meta",noGoals:"Aún no hay metas",simTitle:"¿Cuánto crecerá mi dinero?",perMonth:"Ahorro por mes (R$)",
+ years:"Durante cuántos años",savingsRate:"Ahorro (% al año)",selicRate:"Tesouro Selic (% al año)",
+ ratesNote:"Las tasas son ejemplos. Consulta las actuales en el sitio del Tesouro Direto y ajústalas aquí.",growth:"Crecimiento año a año",
+ piggy:"Hucha",savings:"Cuenta de ahorro",selic:"Tesouro Selic",noYield:"sin intereses",interest:"de intereses",
+ pocket:c=>`Pusiste ${c} de tu bolsillo. *Antes de impuestos y comisiones.`,yr:"a",
+ quizTitle:"Quiz del dinero 🧠",dict:"Minidiccionario",reset:"Borrar todos mis datos",
+ resetSure:"¿Seguro? Esto borra ingresos, gastos y metas.",cancel:"Cancelar",del:"Borrar",
+ tHome:"Inicio",tMov:"Mesada",tGoals:"Metas",tSim:"Simular",tLearn:"Aprender",
+ settings:"Configuración",language:"Idioma",langNote:"Toda la app cambia de idioma, incluidos el quiz y los consejos.",myData:"Mis datos",back:"← Volver",
+ typeValue:"Escribe un valor",entryOk:"Ingreso registrado 💚",expenseOk:"Gasto registrado",fill3:"Completa los 3 campos",
+ goalCreated:"Meta creada 🎯",goalDone:"🎉 ¡Meta cumplida!",savedOk:"¡Ahorrado! 💚",goalRemoved:"Meta eliminada",dataDeleted:"Datos borrados",langChanged:"Idioma: Español",
+ of:"de",left:(p,f,m,n)=>`${p}% · faltan ${f} · ${m}/mes en los próximos ${n} meses`,
+ needSave:(a,b)=>`Necesitas ahorrar <b>${a} al mes</b> (unos ${b} por semana).`,saveBtn:"Ahorrar",savedPrefix:"Ahorrado: ",
+ qProg:(i,n,s)=>`Preguntas de hoy · ${i} de ${n} · ${s} aciertos`,perfect:"¡Perfecto! Sabes de dinero 🏆",good:"¡Muy bien! 💚",
+ tryAgain:"¿Lo intentas de nuevo?",tomorrow:"¡Mañana hay preguntas nuevas!",playAgain:"Jugar de nuevo",next:"Siguiente",result:"Ver resultado",
+ right:"✅ ¡Correcto!",almost:"❌ Casi.",
+ cats:{mesada:"Mesada",trabalho:"Trabajo",presente:"Regalo",outro_in:"Otro",comida:"Comida",jogos:"Juegos",roupa:"Ropa",escola:"Escuela",transporte:"Transporte",meta:"Ahorrar p/ meta",outro:"Otro"}
+},
+de:{
+ sub:"Dein Geld, auf deine Art 💚",balance:"Verfügbares Guthaben",in:"⬆ Rein",out:"⬇ Raus",saved:"🎯 Gespart",
+ whereMoney:"Wohin das Geld ging",mainGoal:"Mein Hauptziel",tipDay:"💡 Tipp des Tages",noSpend:"Noch keine Ausgaben",
+ createGoalHint:"Erstelle ein Ziel im Tab 🎯 Ziele",register:"Eintragen",entry:"+ Einnahme",expense:"− Ausgabe",amount:"Betrag (R$)",
+ desc:"Beschreibung",descPh:"z. B. Taschengeld November",category:"Kategorie",add:"Hinzufügen",history:"Verlauf",nothingYet:"Noch nichts eingetragen",
+ newGoal:"Neues Ziel",whatWant:"Was möchtest du?",goalPh:"z. B. Neues Handy",cost:"Was es kostet (R$)",months:"In wie vielen Monaten",
+ createGoal:"Ziel erstellen",noGoals:"Noch keine Ziele",simTitle:"Wie viel wird aus meinem Geld?",perMonth:"Ich spare pro Monat (R$)",
+ years:"Wie viele Jahre",savingsRate:"Sparkonto (%/Jahr)",selicRate:"Tesouro Selic (%/Jahr)",
+ ratesNote:"Die Zinssätze sind Beispiele. Prüfe die aktuellen auf der Website von Tesouro Direto und passe sie hier an.",growth:"Wachstum Jahr für Jahr",
+ piggy:"Sparschwein",savings:"Sparkonto",selic:"Tesouro Selic",noYield:"keine Zinsen",interest:"Zinsen",
+ pocket:c=>`Du hast ${c} aus eigener Tasche eingezahlt. *Vor Steuern und Gebühren.`,yr:"J",
+ quizTitle:"Geld-Quiz 🧠",dict:"Mini-Wörterbuch",reset:"Alle meine Daten löschen",
+ resetSure:"Bist du sicher? Das löscht Einnahmen, Ausgaben und Ziele.",cancel:"Abbrechen",del:"Löschen",
+ tHome:"Start",tMov:"Taschengeld",tGoals:"Ziele",tSim:"Rechner",tLearn:"Lernen",
+ settings:"Einstellungen",language:"Sprache",langNote:"Die ganze App wechselt die Sprache, auch das Quiz und die Tipps.",myData:"Meine Daten",back:"← Zurück",
+ typeValue:"Gib einen Betrag ein",entryOk:"Einnahme eingetragen 💚",expenseOk:"Ausgabe eingetragen",fill3:"Fülle alle 3 Felder aus",
+ goalCreated:"Ziel erstellt 🎯",goalDone:"🎉 Ziel erreicht!",savedOk:"Gespart! 💚",goalRemoved:"Ziel gelöscht",dataDeleted:"Daten gelöscht",langChanged:"Sprache: Deutsch",
+ of:"von",left:(p,f,m,n)=>`${p}% · noch ${f} · ${m}/Monat in den nächsten ${n} Monaten`,
+ needSave:(a,b)=>`Du musst <b>${a} pro Monat</b> sparen (etwa ${b} pro Woche).`,saveBtn:"Sparen",savedPrefix:"Gespart: ",
+ qProg:(i,n,s)=>`Fragen von heute · ${i} von ${n} · ${s} richtig`,perfect:"Perfekt! Du kennst dich mit Geld aus 🏆",good:"Gut gemacht! 💚",
+ tryAgain:"Noch einmal versuchen?",tomorrow:"Morgen gibt es neue Fragen!",playAgain:"Nochmal spielen",next:"Weiter",result:"Ergebnis ansehen",
+ right:"✅ Richtig!",almost:"❌ Fast.",
+ cats:{mesada:"Taschengeld",trabalho:"Arbeit",presente:"Geschenk",outro_in:"Sonstiges",comida:"Essen",jogos:"Spiele",roupa:"Kleidung",escola:"Schule",transporte:"Fahrten",meta:"Für Ziel sparen",outro:"Sonstiges"}
+}};
+
+const DICAS={
+pt:[
+"Regra 50-30-20: metade pro que você precisa, 30% pro que você quer e 20% pra guardar.",
+"Antes de comprar algo por impulso, espere 24 horas. Se ainda quiser, aí sim.",
+"Guarde primeiro, gaste depois: assim que a mesada cair, separe a parte da meta.",
+"Juros compostos são juros sobre juros. Quanto mais cedo você começa, mais o tempo trabalha por você.",
+"O Tesouro Selic permite investir a partir de uns R$ 30, mas precisa de um adulto responsável na conta.",
+"Pequenos gastos somam: R$ 5 por dia de lanche viram uns R$ 150 por mês.",
+"Anote tudo o que você gasta por uma semana. Muita gente se assusta com o resultado.",
+"Compare preços antes de comprar. O mesmo produto pode custar bem diferente em outra loja.",
+"Uma meta com valor e prazo (“R$ 300 até julho”) funciona melhor que “quero guardar dinheiro”.",
+"Dinheiro de presente ou de aniversário é uma ótima chance de adiantar uma meta.",
+"Promoção só é economia se você já ia comprar aquilo mesmo.",
+"Cuidado com compras dentro de jogos: são valores pequenos que somam rápido.",
+"Divida uma meta grande em metas menores. Comemorar cada etapa ajuda a não desistir.",
+"Poupança, Tesouro e CDB são formas de emprestar dinheiro e receber juros por isso.",
+"Quanto maior a promessa de lucro rápido, maior o risco. Desconfie de “dinheiro fácil”.",
+"Ter uma reserva para imprevistos evita pegar dinheiro emprestado depois.",
+"Antes de comprar, pergunte: eu preciso disso ou só quero agora?",
+"Vender o que você não usa mais (jogos, livros, roupas) é um jeito de juntar dinheiro.",
+"Inflação faz os preços subirem. Dinheiro parado no cofrinho perde valor com o tempo.",
+"Converse com seus pais sobre dinheiro. Eles podem te ajudar a abrir um investimento.",
+"Fazer um pequeno trabalho, como vender algo que você criou, ensina muito sobre dinheiro.",
+"Revise suas metas todo mês. Às vezes dá pra guardar um pouco mais.",
+"Levar lanche de casa alguns dias da semana já faz diferença no fim do mês.",
+"Juros do cartão de crédito estão entre os mais altos que existem. Evite dívidas.",
+"Guardar R$ 10 por semana dá mais de R$ 500 em um ano, sem contar os juros.",
+"Não compare seus gastos com os dos amigos. Cada um tem suas próprias metas.",
+"Assinaturas que você esqueceu de usar também são gasto. Cancele o que não usa.",
+"Ganhar mais ajuda, mas gastar menos do que ganha é o que faz o dinheiro sobrar.",
+"O tempo é o melhor amigo de quem investe: começar cedo vale mais que começar com muito.",
+"Quando bater uma meta, comemore! E já pense na próxima.",
+"Dica de ouro: o dinheiro que você não vê, você não gasta. Separe a parte da meta logo."
+],
+en:[
+"50-30-20 rule: half for what you need, 30% for what you want and 20% to save.",
+"Before buying something on impulse, wait 24 hours. If you still want it, go for it.",
+"Save first, spend later: as soon as your allowance arrives, set aside your goal money.",
+"Compound interest is interest on interest. The sooner you start, the more time works for you.",
+"Tesouro Selic lets you invest from about R$ 30, but an adult has to be responsible for the account.",
+"Small expenses add up: R$ 5 a day on snacks becomes about R$ 150 a month.",
+"Write down everything you spend for one week. Many people are surprised by the result.",
+"Compare prices before buying. The same product can cost very differently in another store.",
+"A goal with an amount and a deadline (“R$ 300 by July”) works better than “I want to save money”.",
+"Gift or birthday money is a great chance to get ahead on a goal.",
+"A sale is only a saving if you were going to buy that thing anyway.",
+"Watch out for in-game purchases: they are small amounts that add up fast.",
+"Split a big goal into smaller ones. Celebrating each step helps you not give up.",
+"Savings accounts, Tesouro and CDBs are ways of lending money and earning interest for it.",
+"The bigger the promise of quick profit, the bigger the risk. Be suspicious of “easy money”.",
+"Having an emergency fund keeps you from having to borrow money later.",
+"Before buying, ask yourself: do I need this, or do I just want it right now?",
+"Selling things you no longer use (games, books, clothes) is a way to collect money.",
+"Inflation makes prices go up. Money sitting in a piggy bank loses value over time.",
+"Talk to your parents about money. They can help you open an investment.",
+"Doing a small job, like selling something you made, teaches you a lot about money.",
+"Review your goals every month. Sometimes you can save a little more.",
+"Bringing a snack from home a few days a week already makes a difference by the end of the month.",
+"Credit card interest is among the highest there is. Avoid debt.",
+"Saving R$ 10 a week gives you more than R$ 500 in a year, not counting interest.",
+"Don't compare your spending with your friends'. Everyone has their own goals.",
+"Subscriptions you forgot to use are spending too. Cancel what you don't use.",
+"Earning more helps, but spending less than you earn is what leaves money over.",
+"Time is an investor's best friend: starting early is worth more than starting with a lot.",
+"When you reach a goal, celebrate! And start thinking about the next one.",
+"Golden tip: money you don't see, you don't spend. Set aside your goal money right away."
+],
+es:[
+"Regla 50-30-20: la mitad para lo que necesitas, 30% para lo que quieres y 20% para ahorrar.",
+"Antes de comprar algo por impulso, espera 24 horas. Si todavía lo quieres, adelante.",
+"Ahorra primero, gasta después: en cuanto llegue tu mesada, separa la parte de la meta.",
+"El interés compuesto es interés sobre interés. Cuanto antes empieces, más trabaja el tiempo para ti.",
+"El Tesouro Selic permite invertir desde unos R$ 30, pero un adulto debe ser responsable de la cuenta.",
+"Los gastos pequeños suman: R$ 5 al día en meriendas son unos R$ 150 al mes.",
+"Apunta todo lo que gastas durante una semana. Mucha gente se sorprende con el resultado.",
+"Compara precios antes de comprar. El mismo producto puede costar muy distinto en otra tienda.",
+"Una meta con valor y plazo (“R$ 300 hasta julio”) funciona mejor que “quiero ahorrar dinero”.",
+"El dinero de regalo o de cumpleaños es una gran oportunidad para adelantar una meta.",
+"Una oferta solo es ahorro si ya ibas a comprar eso de todos modos.",
+"Cuidado con las compras dentro de los juegos: son valores pequeños que suman rápido.",
+"Divide una meta grande en metas más pequeñas. Celebrar cada etapa ayuda a no rendirse.",
+"La cuenta de ahorro, el Tesouro y los CDB son formas de prestar dinero y recibir intereses.",
+"Cuanto mayor es la promesa de ganancia rápida, mayor es el riesgo. Desconfía del “dinero fácil”.",
+"Tener un fondo para imprevistos evita tener que pedir dinero prestado después.",
+"Antes de comprar, pregúntate: ¿lo necesito o solo lo quiero ahora?",
+"Vender lo que ya no usas (juegos, libros, ropa) es una forma de juntar dinero.",
+"La inflación hace que los precios suban. El dinero parado en la hucha pierde valor con el tiempo.",
+"Habla con tus padres sobre dinero. Pueden ayudarte a abrir una inversión.",
+"Hacer un pequeño trabajo, como vender algo que creaste, enseña mucho sobre el dinero.",
+"Revisa tus metas cada mes. A veces se puede ahorrar un poco más.",
+"Llevar merienda de casa algunos días a la semana ya marca la diferencia a fin de mes.",
+"Los intereses de la tarjeta de crédito están entre los más altos que existen. Evita las deudas.",
+"Ahorrar R$ 10 por semana da más de R$ 500 en un año, sin contar los intereses.",
+"No compares tus gastos con los de tus amigos. Cada uno tiene sus propias metas.",
+"Las suscripciones que olvidaste usar también son gasto. Cancela lo que no usas.",
+"Ganar más ayuda, pero gastar menos de lo que ganas es lo que hace que sobre dinero.",
+"El tiempo es el mejor amigo de quien invierte: empezar pronto vale más que empezar con mucho.",
+"Cuando cumplas una meta, ¡celébralo! Y piensa ya en la siguiente.",
+"Consejo de oro: el dinero que no ves, no lo gastas. Separa la parte de la meta enseguida."
+],
+de:[
+"50-30-20-Regel: die Hälfte für das, was du brauchst, 30 % für Wünsche und 20 % zum Sparen.",
+"Bevor du etwas aus einem Impuls kaufst, warte 24 Stunden. Wenn du es dann noch willst, okay.",
+"Erst sparen, dann ausgeben: Sobald das Taschengeld kommt, leg den Teil für dein Ziel zur Seite.",
+"Zinseszins bedeutet Zinsen auf Zinsen. Je früher du anfängst, desto mehr arbeitet die Zeit für dich.",
+"Mit Tesouro Selic kann man ab etwa R$ 30 investieren, aber ein Erwachsener muss für das Konto verantwortlich sein.",
+"Kleine Ausgaben summieren sich: R$ 5 am Tag für Snacks sind etwa R$ 150 im Monat.",
+"Schreib eine Woche lang alles auf, was du ausgibst. Viele sind vom Ergebnis überrascht.",
+"Vergleiche Preise vor dem Kauf. Dasselbe Produkt kann in einem anderen Laden ganz anders kosten.",
+"Ein Ziel mit Betrag und Frist („R$ 300 bis Juli“) funktioniert besser als „Ich will Geld sparen“.",
+"Geld zum Geburtstag oder als Geschenk ist eine tolle Chance, einem Ziel näherzukommen.",
+"Ein Angebot ist nur dann eine Ersparnis, wenn du das sowieso kaufen wolltest.",
+"Vorsicht bei Käufen in Spielen: Es sind kleine Beträge, die sich schnell summieren.",
+"Teile ein großes Ziel in kleinere auf. Jeden Schritt zu feiern hilft, nicht aufzugeben.",
+"Sparkonto, Tesouro und CDB sind Wege, Geld zu verleihen und dafür Zinsen zu bekommen.",
+"Je größer das Versprechen auf schnellen Gewinn, desto größer das Risiko. Misstraue „leichtem Geld“.",
+"Ein Notgroschen verhindert, dass du dir später Geld leihen musst.",
+"Frag dich vor dem Kauf: Brauche ich das oder will ich es nur gerade jetzt?",
+"Dinge zu verkaufen, die du nicht mehr benutzt (Spiele, Bücher, Kleidung), bringt Geld.",
+"Inflation lässt die Preise steigen. Geld im Sparschwein verliert mit der Zeit an Wert.",
+"Sprich mit deinen Eltern über Geld. Sie können dir helfen, eine Geldanlage zu eröffnen.",
+"Ein kleiner Job, etwa etwas Selbstgemachtes zu verkaufen, lehrt dich viel über Geld.",
+"Überprüfe deine Ziele jeden Monat. Manchmal kannst du etwas mehr sparen.",
+"An ein paar Tagen pro Woche einen Snack von zu Hause mitzunehmen, macht am Monatsende schon einen Unterschied.",
+"Kreditkartenzinsen gehören zu den höchsten überhaupt. Vermeide Schulden.",
+"Wer pro Woche R$ 10 spart, hat in einem Jahr über R$ 500, ohne Zinsen.",
+"Vergleiche deine Ausgaben nicht mit denen deiner Freunde. Jeder hat eigene Ziele.",
+"Abos, die du vergessen hast, sind auch Ausgaben. Kündige, was du nicht nutzt.",
+"Mehr zu verdienen hilft, aber weniger auszugeben als du verdienst, lässt Geld übrig.",
+"Zeit ist der beste Freund von Anlegern: Früh anfangen ist mehr wert als mit viel anfangen.",
+"Wenn du ein Ziel erreichst, feiere! Und denk schon an das nächste.",
+"Goldener Tipp: Geld, das du nicht siehst, gibst du nicht aus. Leg den Teil fürs Ziel sofort zur Seite."
+]};
+const DIC={
+pt:[["Selic","A taxa básica de juros do Brasil. Quando ela sobe, investimentos como o Tesouro Selic rendem mais."],["Rendimento","Quanto o seu dinheiro ganhou por estar investido."],["Liquidez","A rapidez para transformar o investimento em dinheiro de volta."],["Reserva de emergência","Dinheiro guardado para imprevistos, tipo celular quebrado."],["Imposto de renda","Parte do lucro de alguns investimentos que vai para o governo. Quanto mais tempo investido, menor a taxa."]],
+en:[["Selic","Brazil's basic interest rate. When it goes up, investments like Tesouro Selic earn more."],["Return","How much your money earned by being invested."],["Liquidity","How fast you can turn an investment back into cash."],["Emergency fund","Money saved for the unexpected, like a broken phone."],["Income tax","Part of the profit from some investments that goes to the government. The longer you stay invested, the lower the rate."]],
+es:[["Selic","La tasa básica de interés de Brasil. Cuando sube, inversiones como el Tesouro Selic rinden más."],["Rendimiento","Cuánto ganó tu dinero por estar invertido."],["Liquidez","La rapidez con la que la inversión vuelve a ser dinero."],["Fondo de emergencia","Dinero guardado para imprevistos, como un móvil roto."],["Impuesto sobre la renta","Parte de la ganancia de algunas inversiones que va al gobierno. Cuanto más tiempo inviertes, menor es la tasa."]],
+de:[["Selic","Der Leitzins Brasiliens. Wenn er steigt, bringen Anlagen wie Tesouro Selic mehr."],["Rendite","Wie viel dein Geld durch die Anlage verdient hat."],["Liquidität","Wie schnell du eine Anlage wieder in Geld umwandeln kannst."],["Notgroschen","Geld für Unerwartetes, zum Beispiel ein kaputtes Handy."],["Einkommensteuer","Ein Teil des Gewinns mancher Anlagen geht an den Staat. Je länger du investiert bleibst, desto niedriger der Satz."]]
+};
+
+const BANCO={};
+BANCO.pt=[
+ ['O que são juros compostos?','Juros sobre juros: o rendimento também passa a render','Juros que só o banco ganha','Uma taxa para abrir conta','O que você ganha volta a render, por isso o dinheiro cresce mais rápido com o tempo.'],
+ ['Qual destes é um título público, em que você empresta dinheiro ao governo?','Tesouro Selic','Cartão de crédito','Pix','No Tesouro Direto você empresta dinheiro ao governo e recebe juros por isso.'],
+ ['Você quer um fone de R$ 240 em 6 meses. Quanto guardar por mês?','R$ 40','R$ 24','R$ 60','R$ 240 ÷ 6 = R$ 40 por mês.'],
+ ['O que é inflação?','Quando os preços sobem e o dinheiro compra menos','Quando o banco te dá dinheiro','Um tipo de investimento','Por isso dinheiro parado no cofrinho perde valor com o tempo.'],
+ ['Qual é o melhor lugar para a reserva de emergência?','Algo seguro e fácil de sacar, como o Tesouro Selic','Ações de uma empresa só','Debaixo do colchão','A reserva precisa ser segura e fácil de resgatar quando você precisar.'],
+ ['Na regra 50-30-20, os 20% vão para…','Guardar e investir','Lazer','Comida','50% para necessidades, 30% para desejos e 20% para guardar.'],
+ ['Quanto é 10% de R$ 80?','R$ 8','R$ 10','R$ 0,80','10% é dividir por 10: R$ 80 ÷ 10 = R$ 8.'],
+ ['Um tênis de R$ 200 está com 25% de desconto. Quanto ele custa agora?','R$ 150','R$ 175','R$ 125','25% de R$ 200 é R$ 50. R$ 200 − R$ 50 = R$ 150.'],
+ ['Guardando R$ 15 por semana, quanto você junta em 8 semanas?','R$ 120','R$ 80','R$ 150','R$ 15 × 8 = R$ 120.'],
+ ['O que é orçamento?','Um plano de quanto entra e quanto sai de dinheiro','Um tipo de conta no banco','O preço de um produto','Fazer orçamento é planejar o dinheiro antes de gastar.'],
+ ['O que significa "liquidez" de um investimento?','A rapidez para transformar ele em dinheiro de volta','O quanto ele rende','O valor mínimo para investir','Alta liquidez = dá para sacar rápido.'],
+ ['O que é a taxa Selic?','A taxa básica de juros do Brasil','Um imposto sobre compras','Uma moeda digital','Ela é definida pelo Banco Central e influencia os juros de todo o país.'],
+ ['Quem define a taxa Selic?','O Copom, do Banco Central','O presidente da República','Os bancos privados','O Comitê de Política Monetária (Copom) se reúne a cada 45 dias, mais ou menos.'],
+ ['O que acontece quando você paga só o mínimo da fatura do cartão?','O resto vira dívida com juros muito altos','A dívida some','Você ganha desconto','Os juros do rotativo do cartão estão entre os mais altos do Brasil.'],
+ ['O que é uma ação?','Um pedacinho de uma empresa','Um empréstimo para o governo','Um tipo de poupança','Quem tem ações é sócio da empresa e pode ganhar ou perder com ela.'],
+ ['O que é diversificar investimentos?','Colocar o dinheiro em lugares diferentes','Investir tudo em um lugar só','Trocar de banco todo mês','Diversificar diminui o risco: se um vai mal, os outros podem compensar.'],
+ ['Qual destas é uma necessidade, e não um desejo?','Material escolar','Skin de jogo','Tênis da moda','Necessidades vêm antes dos desejos no orçamento.'],
+ ['O que é um gasto por impulso?','Comprar sem planejar, só pela vontade do momento','Uma conta fixa todo mês','Um investimento rápido','Esperar 24 horas antes de comprar ajuda a evitar isso.'],
+ ['Se algo promete lucro muito alto, rápido e garantido, provavelmente é…','Golpe ou risco muito alto','Um ótimo negócio sem risco','Tesouro Direto','Não existe dinheiro fácil e garantido. Desconfie sempre.'],
+ ['O que é renda fixa?','Investimento em que você sabe as regras de rendimento ao investir','Salário que nunca muda','Dinheiro guardado no cofrinho','Exemplos: Tesouro Direto, CDB e poupança.'],
+ ['O que é renda variável?','Investimento cujo rendimento não é garantido, como ações','Mesada que muda todo mês','Um tipo de poupança','Pode render mais, mas também pode dar prejuízo.'],
+ ['O que significa CDB?','Certificado de Depósito Bancário','Conta Digital Brasileira','Cartão de Débito Bancário','No CDB você empresta dinheiro para um banco e recebe juros.'],
+ ['O que o FGC (Fundo Garantidor de Créditos) faz?','Protege parte do dinheiro investido se um banco quebrar','Garante lucro em ações','Paga a sua mesada','Investimentos como CDB e poupança têm essa proteção até um limite por pessoa e por banco.'],
+ ['R$ 1.000 rendendo 1% ao mês. Quanto rende no primeiro mês?','R$ 10','R$ 1','R$ 100','1% de R$ 1.000 = R$ 10.'],
+ ['O que é uma meta financeira SMART?','Específica, mensurável e com prazo','Uma meta só para ricos','Uma meta sem valor definido','Ex.: "R$ 600 para um fone até julho" é melhor que "quero guardar dinheiro".'],
+ ['Você ganha R$ 100 de mesada e gasta R$ 120. O que aconteceu?','Você gastou mais do que ganhou','Você economizou R$ 20','Você investiu R$ 20','Gastar mais do que ganha leva a dívidas.'],
+ ['Qual o primeiro passo para organizar o dinheiro?','Anotar quanto entra e quanto sai','Investir em ações','Pegar um empréstimo','Sem saber para onde o dinheiro vai, fica difícil planejar.'],
+ ['O que é patrimônio?','Tudo o que você tem de valor, menos o que deve','Só o dinheiro na carteira','O salário do mês','Patrimônio inclui dinheiro, investimentos e bens.'],
+ ['Pagar à vista com desconto ou parcelar com juros: qual costuma sair mais barato?','À vista com desconto','Parcelado com juros','É sempre igual','Juros fazem o produto custar mais no total.'],
+ ['Um jogo custa R$ 60 ou 3 vezes de R$ 25. Quanto você paga a mais parcelando?','R$ 15','R$ 5','R$ 25','3 × R$ 25 = R$ 75. R$ 75 − R$ 60 = R$ 15 a mais.'],
+ ['O que são dividendos?','Parte do lucro que a empresa divide com quem tem ações','Uma dívida com o banco','Um desconto na loja','Algumas empresas pagam dividendos aos seus acionistas.'],
+ ['Onde ficam negociadas as ações no Brasil?','Na B3, a bolsa de valores','No Banco Central','Na Receita Federal','A B3 fica em São Paulo e é a bolsa brasileira.'],
+ ['O que é um empréstimo?','Dinheiro emprestado que precisa ser devolvido com juros','Um presente do banco','Um investimento sem risco','Quem pega empréstimo paga juros; quem empresta recebe.'],
+ ['Por que começar a investir cedo é vantajoso?','Os juros compostos têm mais tempo para agir','Porque jovens não pagam imposto','Porque o banco dá bônus','Tempo é o maior aliado de quem investe.'],
+ ['O que é o Pix?','Um jeito de transferir dinheiro na hora, criado pelo Banco Central','Um investimento','Um tipo de cartão de crédito','O Pix funciona 24 horas, todos os dias.'],
+ ['Qual destas atitudes ajuda a economizar?','Comparar preços antes de comprar','Comprar tudo que está em promoção','Usar o cartão sem controle','Promoção só é economia se você já ia comprar.'],
+ ['Guardar R$ 5 por dia durante 30 dias dá quanto?','R$ 150','R$ 35','R$ 300','R$ 5 × 30 = R$ 150.'],
+ ['Qual é o maior risco de deixar dinheiro parado por muitos anos sem render?','Perder valor por causa da inflação','O dinheiro sumir sozinho','Pagar imposto sobre ele','Com a inflação, o mesmo dinheiro compra menos no futuro.'],
+ ['O que é "pagar-se primeiro"?','Separar a parte de guardar assim que o dinheiro entra','Comprar algo para você antes de tudo','Pagar as dívidas dos amigos','Assim você não corre o risco de gastar o que ia guardar.'],
+ ['Menores de 18 anos podem investir no Tesouro Direto?','Sim, com a conta aberta com um responsável','Não, nunca','Só depois dos 21 anos','Um pai, mãe ou responsável abre e acompanha a conta junto com o jovem.']
+];
+BANCO.en=[
+["What is compound interest?","Interest on interest: your earnings also start earning","Interest that only the bank earns","A fee for opening an account","What you earn starts earning too, so your money grows faster over time."],
+["Which of these is a government bond, where you lend money to the government?","Tesouro Selic","Credit card","Pix","With Tesouro Direto you lend money to the Brazilian government and earn interest for it."],
+["You want headphones costing R$ 240 in 6 months. How much should you save per month?","R$ 40","R$ 24","R$ 60","R$ 240 ÷ 6 = R$ 40 per month."],
+["What is inflation?","When prices go up and money buys less","When the bank gives you money","A type of investment","That's why money sitting in a piggy bank loses value over time."],
+["What is the best place for an emergency fund?","Something safe and easy to withdraw, like Tesouro Selic","Shares of a single company","Under the mattress","An emergency fund has to be safe and easy to access when you need it."],
+["In the 50-30-20 rule, the 20% goes to…","Saving and investing","Fun","Food","50% for needs, 30% for wants and 20% to save."],
+["What is 10% of R$ 80?","R$ 8","R$ 10","R$ 0.80","10% means dividing by 10: R$ 80 ÷ 10 = R$ 8."],
+["Sneakers costing R$ 200 are 25% off. How much do they cost now?","R$ 150","R$ 175","R$ 125","25% of R$ 200 is R$ 50. R$ 200 − R$ 50 = R$ 150."],
+["If you save R$ 15 a week, how much do you have after 8 weeks?","R$ 120","R$ 80","R$ 150","R$ 15 × 8 = R$ 120."],
+["What is a budget?","A plan of how much money comes in and goes out","A type of bank account","The price of a product","Making a budget means planning your money before spending it."],
+["What does the “liquidity” of an investment mean?","How fast you can turn it back into cash","How much it earns","The minimum amount to invest","High liquidity = you can withdraw quickly."],
+["What is the Selic rate?","Brazil's basic interest rate","A tax on purchases","A digital currency","It is set by Brazil's Central Bank and affects interest rates across the country."],
+["Who sets the Selic rate?","Copom, at Brazil's Central Bank","The President","Private banks","The Monetary Policy Committee (Copom) meets roughly every 45 days."],
+["What happens if you only pay the minimum on your credit card bill?","The rest becomes debt with very high interest","The debt disappears","You get a discount","Revolving credit card interest is among the highest in Brazil."],
+["What is a share (stock)?","A small piece of a company","A loan to the government","A type of savings account","Shareholders own part of the company and can gain or lose with it."],
+["What does diversifying investments mean?","Putting your money in different places","Investing everything in one place","Changing banks every month","Diversifying lowers risk: if one does badly, the others can make up for it."],
+["Which of these is a need, not a want?","School supplies","A game skin","Trendy sneakers","Needs come before wants in a budget."],
+["What is an impulse purchase?","Buying without planning, just because you feel like it","A fixed bill every month","A quick investment","Waiting 24 hours before buying helps you avoid it."],
+["If something promises very high, fast and guaranteed profit, it's probably…","A scam or very high risk","A great deal with no risk","Tesouro Direto","There is no easy, guaranteed money. Always be suspicious."],
+["What is fixed income?","An investment whose return rules you know when you invest","A salary that never changes","Money kept in a piggy bank","Examples: Tesouro Direto, CDBs and savings accounts."],
+["What is variable income?","An investment whose return is not guaranteed, like stocks","An allowance that changes every month","A type of savings account","It can earn more, but it can also lose money."],
+["What does CDB stand for in Brazil?","Bank Deposit Certificate","Brazilian Digital Account","Bank Debit Card","With a CDB you lend money to a bank and earn interest."],
+["What does the FGC (Credit Guarantee Fund) do?","Protects part of your invested money if a bank fails","Guarantees profit on stocks","Pays your allowance","Investments like CDBs and savings accounts are protected up to a limit per person and per bank."],
+["R$ 1,000 earning 1% per month. How much does it earn in the first month?","R$ 10","R$ 1","R$ 100","1% of R$ 1,000 = R$ 10."],
+["What is a SMART financial goal?","Specific, measurable and with a deadline","A goal only for rich people","A goal with no set amount","E.g. “R$ 600 for headphones by July” is better than “I want to save money”."],
+["You get R$ 100 of allowance and spend R$ 120. What happened?","You spent more than you earned","You saved R$ 20","You invested R$ 20","Spending more than you earn leads to debt."],
+["What is the first step to organizing your money?","Writing down how much comes in and goes out","Investing in stocks","Taking out a loan","Without knowing where your money goes, it's hard to plan."],
+["What is net worth?","Everything valuable you own, minus what you owe","Only the cash in your wallet","Your monthly salary","Net worth includes money, investments and belongings."],
+["Paying upfront with a discount or in installments with interest: which is usually cheaper?","Upfront with a discount","Installments with interest","It's always the same","Interest makes the product cost more in total."],
+["A game costs R$ 60, or 3 payments of R$ 25. How much more do you pay in installments?","R$ 15","R$ 5","R$ 25","3 × R$ 25 = R$ 75. R$ 75 − R$ 60 = R$ 15 more."],
+["What are dividends?","Part of a company's profit shared with its shareholders","A debt with the bank","A store discount","Some companies pay dividends to their shareholders."],
+["Where are stocks traded in Brazil?","At B3, the stock exchange","At the Central Bank","At the Federal Revenue Service","B3 is in São Paulo and is Brazil's stock exchange."],
+["What is a loan?","Borrowed money that has to be paid back with interest","A gift from the bank","A risk-free investment","Whoever borrows pays interest; whoever lends receives it."],
+["Why is it good to start investing early?","Compound interest has more time to work","Because young people don't pay taxes","Because the bank gives a bonus","Time is an investor's greatest ally."],
+["What is Pix?","An instant money transfer system created by Brazil's Central Bank","An investment","A type of credit card","Pix works 24 hours a day, every day."],
+["Which of these habits helps you save?","Comparing prices before buying","Buying everything on sale","Using a card without keeping track","A sale only saves money if you were going to buy it anyway."],
+["Saving R$ 5 a day for 30 days gives you how much?","R$ 150","R$ 35","R$ 300","R$ 5 × 30 = R$ 150."],
+["What is the biggest risk of leaving money untouched for years without earning anything?","Losing value because of inflation","The money vanishing on its own","Paying tax on it","With inflation, the same money buys less in the future."],
+["What does “paying yourself first” mean?","Setting aside your savings as soon as money comes in","Buying something for yourself before anything else","Paying your friends' debts","That way you don't risk spending what you meant to save."],
+["Can people under 18 invest in Tesouro Direto?","Yes, with an account opened by a parent or guardian","No, never","Only after age 21","A parent or guardian opens and follows the account together with the young person."]
+];
+BANCO.es=[
+["¿Qué es el interés compuesto?","Interés sobre interés: lo que ganas también empieza a rendir","Interés que solo gana el banco","Una comisión por abrir una cuenta","Lo que ganas vuelve a rendir, por eso el dinero crece más rápido con el tiempo."],
+["¿Cuál de estos es un bono del gobierno, en el que prestas dinero al gobierno?","Tesouro Selic","Tarjeta de crédito","Pix","Con el Tesouro Direto prestas dinero al gobierno de Brasil y recibes intereses."],
+["Quieres unos auriculares de R$ 240 en 6 meses. ¿Cuánto debes ahorrar por mes?","R$ 40","R$ 24","R$ 60","R$ 240 ÷ 6 = R$ 40 por mes."],
+["¿Qué es la inflación?","Cuando los precios suben y el dinero compra menos","Cuando el banco te da dinero","Un tipo de inversión","Por eso el dinero parado en la hucha pierde valor con el tiempo."],
+["¿Cuál es el mejor lugar para el fondo de emergencia?","Algo seguro y fácil de retirar, como el Tesouro Selic","Acciones de una sola empresa","Debajo del colchón","El fondo de emergencia debe ser seguro y fácil de retirar cuando lo necesites."],
+["En la regla 50-30-20, el 20% va para…","Ahorrar e invertir","Ocio","Comida","50% para necesidades, 30% para deseos y 20% para ahorrar."],
+["¿Cuánto es el 10% de R$ 80?","R$ 8","R$ 10","R$ 0,80","El 10% es dividir entre 10: R$ 80 ÷ 10 = R$ 8."],
+["Unas zapatillas de R$ 200 tienen un 25% de descuento. ¿Cuánto cuestan ahora?","R$ 150","R$ 175","R$ 125","El 25% de R$ 200 es R$ 50. R$ 200 − R$ 50 = R$ 150."],
+["Si ahorras R$ 15 por semana, ¿cuánto juntas en 8 semanas?","R$ 120","R$ 80","R$ 150","R$ 15 × 8 = R$ 120."],
+["¿Qué es un presupuesto?","Un plan de cuánto dinero entra y cuánto sale","Un tipo de cuenta bancaria","El precio de un producto","Hacer un presupuesto es planificar el dinero antes de gastarlo."],
+["¿Qué significa la “liquidez” de una inversión?","La rapidez para convertirla de nuevo en dinero","Cuánto rinde","El valor mínimo para invertir","Liquidez alta = puedes retirar rápido."],
+["¿Qué es la tasa Selic?","La tasa básica de interés de Brasil","Un impuesto sobre las compras","Una moneda digital","La define el Banco Central de Brasil e influye en los intereses de todo el país."],
+["¿Quién define la tasa Selic?","El Copom, del Banco Central","El presidente","Los bancos privados","El Comité de Política Monetaria (Copom) se reúne más o menos cada 45 días."],
+["¿Qué pasa si pagas solo el mínimo de la tarjeta de crédito?","El resto se convierte en deuda con intereses muy altos","La deuda desaparece","Recibes un descuento","Los intereses del crédito rotativo de la tarjeta están entre los más altos de Brasil."],
+["¿Qué es una acción?","Un pedacito de una empresa","Un préstamo al gobierno","Un tipo de cuenta de ahorro","Quien tiene acciones es socio de la empresa y puede ganar o perder con ella."],
+["¿Qué es diversificar inversiones?","Poner el dinero en lugares diferentes","Invertir todo en un solo lugar","Cambiar de banco cada mes","Diversificar reduce el riesgo: si una va mal, las otras pueden compensar."],
+["¿Cuál de estas es una necesidad y no un deseo?","Material escolar","Una skin de juego","Zapatillas de moda","Las necesidades van antes que los deseos en el presupuesto."],
+["¿Qué es una compra por impulso?","Comprar sin planear, solo por ganas del momento","Una factura fija cada mes","Una inversión rápida","Esperar 24 horas antes de comprar ayuda a evitarla."],
+["Si algo promete una ganancia muy alta, rápida y garantizada, probablemente es…","Una estafa o un riesgo muy alto","Un gran negocio sin riesgo","Tesouro Direto","No existe dinero fácil y garantizado. Desconfía siempre."],
+["¿Qué es la renta fija?","Una inversión cuyas reglas de rendimiento conoces al invertir","Un sueldo que nunca cambia","Dinero guardado en la hucha","Ejemplos: Tesouro Direto, CDB y cuenta de ahorro."],
+["¿Qué es la renta variable?","Una inversión cuyo rendimiento no está garantizado, como las acciones","Una mesada que cambia cada mes","Un tipo de cuenta de ahorro","Puede rendir más, pero también puede dar pérdidas."],
+["¿Qué significa CDB en Brasil?","Certificado de Depósito Bancario","Cuenta Digital Brasileña","Tarjeta de Débito Bancaria","Con un CDB prestas dinero a un banco y recibes intereses."],
+["¿Qué hace el FGC (Fondo Garantizador de Créditos)?","Protege parte del dinero invertido si un banco quiebra","Garantiza ganancias en acciones","Paga tu mesada","Inversiones como el CDB y la cuenta de ahorro tienen esa protección hasta un límite por persona y por banco."],
+["R$ 1.000 rindiendo un 1% al mes. ¿Cuánto rinde el primer mes?","R$ 10","R$ 1","R$ 100","El 1% de R$ 1.000 = R$ 10."],
+["¿Qué es una meta financiera SMART?","Específica, medible y con plazo","Una meta solo para ricos","Una meta sin valor definido","Ej.: “R$ 600 para unos auriculares hasta julio” es mejor que “quiero ahorrar dinero”."],
+["Recibes R$ 100 de mesada y gastas R$ 120. ¿Qué pasó?","Gastaste más de lo que ganaste","Ahorraste R$ 20","Invertiste R$ 20","Gastar más de lo que ganas lleva a deudas."],
+["¿Cuál es el primer paso para organizar el dinero?","Apuntar cuánto entra y cuánto sale","Invertir en acciones","Pedir un préstamo","Sin saber a dónde va el dinero, es difícil planificar."],
+["¿Qué es el patrimonio?","Todo lo que tienes de valor, menos lo que debes","Solo el dinero de la cartera","El sueldo del mes","El patrimonio incluye dinero, inversiones y bienes."],
+["Pagar al contado con descuento o a plazos con intereses: ¿qué suele salir más barato?","Al contado con descuento","A plazos con intereses","Siempre es igual","Los intereses hacen que el producto cueste más en total."],
+["Un juego cuesta R$ 60 o 3 pagos de R$ 25. ¿Cuánto pagas de más a plazos?","R$ 15","R$ 5","R$ 25","3 × R$ 25 = R$ 75. R$ 75 − R$ 60 = R$ 15 de más."],
+["¿Qué son los dividendos?","Parte de la ganancia que la empresa reparte con sus accionistas","Una deuda con el banco","Un descuento en la tienda","Algunas empresas pagan dividendos a sus accionistas."],
+["¿Dónde se negocian las acciones en Brasil?","En la B3, la bolsa de valores","En el Banco Central","En la Receita Federal","La B3 está en São Paulo y es la bolsa brasileña."],
+["¿Qué es un préstamo?","Dinero prestado que hay que devolver con intereses","Un regalo del banco","Una inversión sin riesgo","Quien pide prestado paga intereses; quien presta los recibe."],
+["¿Por qué conviene empezar a invertir pronto?","El interés compuesto tiene más tiempo para actuar","Porque los jóvenes no pagan impuestos","Porque el banco da un bono","El tiempo es el mayor aliado de quien invierte."],
+["¿Qué es el Pix?","Una forma de transferir dinero al instante, creada por el Banco Central de Brasil","Una inversión","Un tipo de tarjeta de crédito","El Pix funciona las 24 horas, todos los días."],
+["¿Cuál de estas actitudes ayuda a ahorrar?","Comparar precios antes de comprar","Comprar todo lo que está en oferta","Usar la tarjeta sin control","Una oferta solo es ahorro si ya ibas a comprarlo."],
+["¿Cuánto juntas si ahorras R$ 5 al día durante 30 días?","R$ 150","R$ 35","R$ 300","R$ 5 × 30 = R$ 150."],
+["¿Cuál es el mayor riesgo de dejar el dinero parado muchos años sin rendir?","Perder valor por la inflación","Que el dinero desaparezca solo","Pagar impuestos por él","Con la inflación, el mismo dinero compra menos en el futuro."],
+["¿Qué significa “págate primero”?","Separar la parte del ahorro en cuanto entra el dinero","Comprarte algo antes que nada","Pagar las deudas de tus amigos","Así no corres el riesgo de gastar lo que ibas a ahorrar."],
+["¿Los menores de 18 años pueden invertir en el Tesouro Direto?","Sí, con la cuenta abierta por un padre o tutor","No, nunca","Solo después de los 21 años","Un padre, madre o tutor abre y acompaña la cuenta junto con el joven."]
+];
+BANCO.de=[
+["Was ist der Zinseszins?","Zinsen auf Zinsen: Auch dein Ertrag bringt wieder Ertrag","Zinsen, die nur die Bank bekommt","Eine Gebühr für die Kontoeröffnung","Was du verdienst, arbeitet weiter. Deshalb wächst das Geld mit der Zeit schneller."],
+["Was davon ist eine Staatsanleihe, bei der du dem Staat Geld leihst?","Tesouro Selic","Kreditkarte","Pix","Mit Tesouro Direto leihst du dem brasilianischen Staat Geld und bekommst dafür Zinsen."],
+["Du willst Kopfhörer für R$ 240 in 6 Monaten. Wie viel musst du pro Monat sparen?","R$ 40","R$ 24","R$ 60","R$ 240 ÷ 6 = R$ 40 pro Monat."],
+["Was ist Inflation?","Wenn die Preise steigen und man mit Geld weniger kaufen kann","Wenn die Bank dir Geld gibt","Eine Art Geldanlage","Deshalb verliert Geld im Sparschwein mit der Zeit an Wert."],
+["Wo ist der beste Ort für einen Notgroschen?","Etwas Sicheres, das man schnell abheben kann, wie Tesouro Selic","Aktien von nur einer Firma","Unter der Matratze","Ein Notgroschen muss sicher und schnell verfügbar sein."],
+["Bei der 50-30-20-Regel gehen die 20 % an…","Sparen und Anlegen","Freizeit","Essen","50 % für Bedürfnisse, 30 % für Wünsche und 20 % zum Sparen."],
+["Wie viel sind 10 % von R$ 80?","R$ 8","R$ 10","R$ 0,80","10 % heißt durch 10 teilen: R$ 80 ÷ 10 = R$ 8."],
+["Turnschuhe für R$ 200 sind um 25 % reduziert. Was kosten sie jetzt?","R$ 150","R$ 175","R$ 125","25 % von R$ 200 sind R$ 50. R$ 200 − R$ 50 = R$ 150."],
+["Wenn du pro Woche R$ 15 sparst, wie viel hast du nach 8 Wochen?","R$ 120","R$ 80","R$ 150","R$ 15 × 8 = R$ 120."],
+["Was ist ein Budget?","Ein Plan, wie viel Geld reinkommt und rausgeht","Eine Art Bankkonto","Der Preis eines Produkts","Ein Budget heißt, das Geld zu planen, bevor man es ausgibt."],
+["Was bedeutet die „Liquidität“ einer Geldanlage?","Wie schnell man sie wieder in Geld umwandeln kann","Wie viel sie bringt","Der Mindestbetrag zum Anlegen","Hohe Liquidität = man kommt schnell an sein Geld."],
+["Was ist der Selic-Zins?","Der Leitzins Brasiliens","Eine Steuer auf Einkäufe","Eine Digitalwährung","Er wird von der brasilianischen Zentralbank festgelegt und beeinflusst die Zinsen im ganzen Land."],
+["Wer legt den Selic-Zins fest?","Der Copom der Zentralbank","Der Präsident","Private Banken","Der Ausschuss für Geldpolitik (Copom) trifft sich etwa alle 45 Tage."],
+["Was passiert, wenn du bei der Kreditkarte nur den Mindestbetrag zahlst?","Der Rest wird zu Schulden mit sehr hohen Zinsen","Die Schulden verschwinden","Du bekommst Rabatt","Die Zinsen für Kreditkartenschulden gehören in Brasilien zu den höchsten."],
+["Was ist eine Aktie?","Ein kleiner Teil einer Firma","Ein Kredit an den Staat","Eine Art Sparkonto","Wer Aktien hat, ist Miteigentümer der Firma und kann mit ihr gewinnen oder verlieren."],
+["Was bedeutet es, Geldanlagen zu streuen?","Das Geld auf verschiedene Anlagen verteilen","Alles an einem Ort anlegen","Jeden Monat die Bank wechseln","Streuen senkt das Risiko: Läuft eine Anlage schlecht, können die anderen das ausgleichen."],
+["Was davon ist ein Bedürfnis und kein Wunsch?","Schulsachen","Ein Skin für ein Spiel","Trendige Turnschuhe","Bedürfnisse kommen im Budget vor Wünschen."],
+["Was ist ein Impulskauf?","Ohne Plan kaufen, nur aus Lust im Moment","Eine feste Rechnung jeden Monat","Eine schnelle Geldanlage","24 Stunden vor dem Kauf zu warten hilft, das zu vermeiden."],
+["Wenn etwas sehr hohen, schnellen und garantierten Gewinn verspricht, ist es wahrscheinlich…","Betrug oder sehr riskant","Ein tolles Geschäft ohne Risiko","Tesouro Direto","Leichtes, garantiertes Geld gibt es nicht. Sei immer misstrauisch."],
+["Was sind festverzinsliche Anlagen?","Anlagen, bei denen du die Ertragsregeln schon beim Anlegen kennst","Ein Gehalt, das sich nie ändert","Geld im Sparschwein","Beispiele: Tesouro Direto, CDB und Sparkonto."],
+["Was sind Anlagen mit variablem Ertrag?","Anlagen ohne garantierten Ertrag, zum Beispiel Aktien","Taschengeld, das sich jeden Monat ändert","Eine Art Sparkonto","Sie können mehr bringen, aber auch Verluste machen."],
+["Wofür steht CDB in Brasilien?","Bankeinlagenzertifikat","Brasilianisches Digitalkonto","Bank-Debitkarte","Mit einem CDB leihst du einer Bank Geld und bekommst Zinsen."],
+["Was macht der FGC (Einlagensicherungsfonds)?","Er schützt einen Teil des angelegten Geldes, wenn eine Bank pleitegeht","Er garantiert Gewinne bei Aktien","Er zahlt dein Taschengeld","Anlagen wie CDB und Sparkonto sind bis zu einer Grenze pro Person und Bank geschützt."],
+["R$ 1.000 bringen 1 % pro Monat. Wie viel ist das im ersten Monat?","R$ 10","R$ 1","R$ 100","1 % von R$ 1.000 = R$ 10."],
+["Was ist ein SMART-Finanzziel?","Konkret, messbar und mit Frist","Ein Ziel nur für Reiche","Ein Ziel ohne festen Betrag","Z. B. ist „R$ 600 für Kopfhörer bis Juli“ besser als „Ich will Geld sparen“."],
+["Du bekommst R$ 100 Taschengeld und gibst R$ 120 aus. Was ist passiert?","Du hast mehr ausgegeben, als du bekommen hast","Du hast R$ 20 gespart","Du hast R$ 20 angelegt","Mehr auszugeben, als man hat, führt zu Schulden."],
+["Was ist der erste Schritt, um dein Geld zu ordnen?","Aufschreiben, wie viel reinkommt und rausgeht","In Aktien investieren","Einen Kredit aufnehmen","Ohne zu wissen, wohin das Geld geht, kann man schwer planen."],
+["Was ist Vermögen?","Alles, was du an Wert besitzt, minus deine Schulden","Nur das Bargeld im Portemonnaie","Das Monatsgehalt","Zum Vermögen gehören Geld, Anlagen und Besitz."],
+["Bar mit Rabatt oder in Raten mit Zinsen zahlen: Was ist meist günstiger?","Bar mit Rabatt","In Raten mit Zinsen","Es ist immer gleich","Durch Zinsen kostet das Produkt insgesamt mehr."],
+["Ein Spiel kostet R$ 60 oder 3 Raten zu R$ 25. Wie viel zahlst du in Raten mehr?","R$ 15","R$ 5","R$ 25","3 × R$ 25 = R$ 75. R$ 75 − R$ 60 = R$ 15 mehr."],
+["Was sind Dividenden?","Ein Teil des Gewinns, den die Firma an ihre Aktionäre ausschüttet","Schulden bei der Bank","Ein Rabatt im Laden","Manche Firmen zahlen ihren Aktionären Dividenden."],
+["Wo werden in Brasilien Aktien gehandelt?","An der B3, der Börse","Bei der Zentralbank","Beim Finanzamt","Die B3 ist in São Paulo und ist die brasilianische Börse."],
+["Was ist ein Kredit?","Geliehenes Geld, das mit Zinsen zurückgezahlt werden muss","Ein Geschenk der Bank","Eine Anlage ohne Risiko","Wer sich Geld leiht, zahlt Zinsen; wer verleiht, bekommt sie."],
+["Warum lohnt es sich, früh mit dem Anlegen anzufangen?","Der Zinseszins hat mehr Zeit zu wirken","Weil Jugendliche keine Steuern zahlen","Weil die Bank einen Bonus gibt","Zeit ist der größte Verbündete von Anlegern."],
+["Was ist Pix?","Ein System für Sofortüberweisungen, entwickelt von der brasilianischen Zentralbank","Eine Geldanlage","Eine Art Kreditkarte","Pix funktioniert rund um die Uhr, jeden Tag."],
+["Welche Gewohnheit hilft beim Sparen?","Vor dem Kauf Preise vergleichen","Alles kaufen, was im Angebot ist","Die Karte ohne Überblick nutzen","Ein Angebot spart nur, wenn du es sowieso kaufen wolltest."],
+["Wer 30 Tage lang täglich R$ 5 spart, hat wie viel?","R$ 150","R$ 35","R$ 300","R$ 5 × 30 = R$ 150."],
+["Was ist das größte Risiko, wenn Geld jahrelang ohne Zinsen herumliegt?","Es verliert durch Inflation an Wert","Das Geld verschwindet von selbst","Man zahlt Steuern darauf","Mit der Inflation kauft man mit demselben Geld in Zukunft weniger."],
+["Was bedeutet „sich selbst zuerst bezahlen“?","Den Sparanteil sofort zur Seite legen, wenn Geld reinkommt","Sich zuerst etwas kaufen","Die Schulden von Freunden bezahlen","So läufst du nicht Gefahr, das Sparbudget auszugeben."],
+["Dürfen Jugendliche unter 18 in Tesouro Direto investieren?","Ja, mit einem Konto, das ein Elternteil oder Vormund eröffnet","Nein, nie","Erst ab 21 Jahren","Ein Elternteil oder Vormund eröffnet und begleitet das Konto zusammen mit dem Jugendlichen."]
+];
+
+const $=id=>document.getElementById(id);
+const KEY='mesadaplus_v2',LKEY='mesadaplus_lang';
+let S={mov:[],goals:[]};
+try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&d.mov)S=d;}catch(e){}
+let LANG='pt';
+try{const l=localStorage.getItem(LKEY);if(l&&T[l])LANG=l;}catch(e){}
+const L=()=>T[LANG];
+const brl=v=>'R$ '+v.toLocaleString(LANGS[LANG].loc,{minimumFractionDigits:2,maximumFractionDigits:2});
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),1800);}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const ICON={mesada:'💰',trabalho:'🛠️',presente:'🎁',outro_in:'✨',comida:'🍔',jogos:'🎮',roupa:'👕',escola:'📚',transporte:'🚌',meta:'🎯',outro:'📦'};
+const GROUPS={in:['mesada','trabalho','presente','outro_in'],out:['comida','jogos','roupa','escola','transporte','meta','outro']};
+const catName=c=>L().cats[c]||L().cats.outro;
+const catIcon=c=>ICON[c]||'📦';
+
+// textos fixos da tela
+function applyLang(){
+  document.documentElement.lang=LANGS[LANG].loc;
+  document.querySelectorAll('[data-t]').forEach(el=>{const v=L()[el.dataset.t];if(typeof v==='string')el.textContent=v;});
+  document.querySelectorAll('[data-ph]').forEach(el=>el.placeholder=L()[el.dataset.ph]);
+  $('langs').innerHTML=Object.entries(LANGS).map(([k,v])=>`<button class="lang ${k===LANG?'on':''}" data-l="${k}"><span>${v.flag}</span>${v.name}</button>`).join('');
+  $('langs').querySelectorAll('.lang').forEach(b=>b.onclick=()=>setLang(b.dataset.l));
+  drawChips();goalHint();render();sim();dica();dic();montaQuiz();qi=0;score=0;quiz();
+}
+function setLang(l){LANG=l;try{localStorage.setItem(LKEY,l);}catch(e){}applyLang();toast(L().langChanged);}
+
+// navegação
+function show(v){
+  document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.v===v));
+  window.scrollTo(0,0);if(v==='sim')sim();
+}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>show(b.dataset.v));
+$('gear').onclick=()=>show('set');
+$('setBack').onclick=()=>show('home');
+
+// mesada
+let tipo='in',cat='mesada';
+function drawChips(){
+  $('mCats').innerHTML=GROUPS[tipo].map(k=>`<button data-c="${k}" class="${k===cat?'on':''}">${catIcon(k)} ${catName(k)}</button>`).join('');
+  $('mCats').querySelectorAll('button').forEach(b=>b.onclick=()=>{cat=b.dataset.c;drawChips();});
+}
+document.querySelectorAll('#tipoSeg button').forEach(b=>b.onclick=()=>{
+  tipo=b.dataset.tp;cat=GROUPS[tipo][0];
+  document.querySelectorAll('#tipoSeg button').forEach(x=>x.classList.toggle('on',x===b));
+  $('tipoSeg').classList.toggle('r',tipo==='out');drawChips();
+});
+$('mAdd').onclick=()=>{
+  const v=parseFloat($('mVal').value);
+  if(!(v>0)){toast(L().typeValue);return;}
+  const d=$('mDesc').value.trim();
+  S.mov.push({id:Date.now(),t:tipo,v,d,c:cat,ts:Date.now()});
+  if(cat==='meta'&&S.goals.length){S.goals[0].s+=v;}
+  $('mVal').value='';$('mDesc').value='';save();render();
+  toast(tipo==='in'?L().entryOk:L().expenseOk);
+};
+
+// metas
+function goalHint(){
+  const v=parseFloat($('gVal').value),m=parseInt($('gMon').value);
+  if(v>0&&m>0){$('gHint').style.display='block';$('gHint').innerHTML=L().needSave(brl(v/m),brl(v/m/4.3));}
+  else $('gHint').style.display='none';
+}
+['gVal','gMon'].forEach(i=>$(i).oninput=goalHint);
+$('gAdd').onclick=()=>{
+  const n=$('gName').value.trim(),v=parseFloat($('gVal').value),m=parseInt($('gMon').value);
+  if(!n||!(v>0)||!(m>0)){toast(L().fill3);return;}
+  S.goals.push({id:Date.now(),n,v,m,s:0,ts:Date.now()});
+  ['gName','gVal','gMon'].forEach(i=>$(i).value='');goalHint();save();render();toast(L().goalCreated);
+};
+function goalCard(g,actions){
+  const p=Math.min(100,g.s/g.v*100),falta=Math.max(0,g.v-g.s);
+  const passados=Math.max(0,(Date.now()-g.ts)/(30*864e5));
+  const restante=Math.max(1,Math.ceil(g.m-passados));
+  return `<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><b style="font-size:16px">${esc(g.n)}</b><span class="mute">${brl(g.s)} ${L().of} ${brl(g.v)}</span></div>
+  <div class="bar"><div style="width:${p}%"></div></div>
+  <div class="mute">${p>=100?L().goalDone:L().left(p.toFixed(0),brl(falta),brl(falta/restante),restante)}</div>
+  ${actions?`<div class="row" style="margin-top:6px"><input type="number" inputmode="decimal" placeholder="R$" id="gi${g.id}"><button class="btn" style="margin-top:0" onclick="addTo(${g.id})">${L().saveBtn}</button><button class="btn red" style="margin-top:0;flex:.4" onclick="delGoal(${g.id})">🗑</button></div>`:''}`;
+}
+window.addTo=id=>{
+  const g=S.goals.find(x=>x.id===id),v=parseFloat($('gi'+id).value);
+  if(!(v>0))return toast(L().typeValue);
+  g.s+=v;S.mov.push({id:Date.now(),t:'out',v,d:'',goal:g.n,c:'meta',ts:Date.now()});
+  save();render();toast(g.s>=g.v?L().goalDone:L().savedOk);
+};
+window.delGoal=id=>{S.goals=S.goals.filter(x=>x.id!==id);save();render();toast(L().goalRemoved);};
+window.delMov=id=>{S.mov=S.mov.filter(x=>x.id!==id);save();render();};
+
+// título de uma movimentação (traduz os textos automáticos)
+function movTitle(m){
+  if(m.goal)return L().savedPrefix+m.goal;
+  if(m.d&&/^Guardado: /.test(m.d))return L().savedPrefix+m.d.slice(10);
+  return m.d||catName(m.c);
+}
+
+function render(){
+  const tin=S.mov.filter(m=>m.t==='in').reduce((a,m)=>a+m.v,0);
+  const tout=S.mov.filter(m=>m.t==='out'&&m.c!=='meta').reduce((a,m)=>a+m.v,0);
+  const tsave=S.mov.filter(m=>m.c==='meta').reduce((a,m)=>a+m.v,0);
+  $('saldo').textContent=brl(tin-tout-tsave);
+  $('tin').textContent=brl(tin);$('tout').textContent=brl(tout);$('tsave').textContent=brl(tsave);
+  const by={};S.mov.filter(m=>m.t==='out').forEach(m=>by[m.c]=(by[m.c]||0)+m.v);
+  const tot=Object.values(by).reduce((a,b)=>a+b,0);
+  $('cats').innerHTML=tot?Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-weight:700;font-size:14px"><span>${catIcon(c)} ${catName(c)}</span><span>${brl(v)}</span></div><div class="bar" style="height:8px;margin:4px 0 0"><div style="width:${v/tot*100}%;background:${c==='meta'?'var(--y)':'var(--g)'}"></div></div></div>`).join(''):`<div class="empty">${L().noSpend}</div>`;
+  $('mainGoal').innerHTML=S.goals.length?goalCard(S.goals[0],false):`<div class="empty">${L().createGoalHint}</div>`;
+  const M=[...S.mov].sort((a,b)=>b.ts-a.ts);
+  $('movList').innerHTML=M.length?M.map(m=>{const neg=m.t==='out';return `<div class="item"><div class="ico" style="background:${neg?'var(--rl)':'var(--gl)'}">${catIcon(m.c)}</div><div class="t"><b>${esc(movTitle(m))}</b><span class="mute">${new Date(m.ts).toLocaleDateString(LANGS[LANG].loc)}</span></div><div class="v ${neg?'minus':'plus'}">${neg?'−':'+'}${brl(m.v)}</div><button class="x" onclick="delMov(${m.id})">×</button></div>`}).join(''):`<div class="empty">${L().nothingYet}</div>`;
+  $('goalList').innerHTML=S.goals.map(g=>`<div class="card">${goalCard(g,true)}</div>`).join('')||`<div class="card empty">${L().noGoals}</div>`;
+}
+
+// simulador
+function fv(mes,anual,meses){const r=Math.pow(1+anual/100,1/12)-1;if(!r)return mes*meses;return mes*((Math.pow(1+r,meses)-1)/r)*(1+r);}
+function sim(){
+  const mes=Math.max(0,parseFloat($('sMes').value)||0),anos=Math.min(40,Math.max(1,parseInt($('sAnos').value)||1));
+  const p=parseFloat($('sPoup').value)||0,t=parseFloat($('sTes').value)||0,n=anos*12;
+  const c=mes*n,pv=fv(mes,p,n),tv=fv(mes,t,n),l=L();
+  $('sRes').innerHTML=`
+   <div class="resb" style="background:#f0f3f1"><span>🐷 ${l.piggy}<br><span class="mute">${l.noYield}</span></span><b>${brl(c)}</b></div>
+   <div class="resb" style="background:#fff5dc"><span>🏦 ${l.savings}<br><span class="mute">+${brl(pv-c)} ${l.interest}</span></span><b>${brl(pv)}</b></div>
+   <div class="resb" style="background:var(--gl)"><span>📈 ${l.selic}<br><span class="mute">+${brl(tv-c)} ${l.interest}*</span></span><b style="color:var(--g2)">${brl(tv)}</b></div>
+   <div class="mute">${l.pocket(brl(c))}</div>`;
+  const W=480,H=220,pad=44,pts=[];for(let y=0;y<=anos;y++)pts.push([y,mes*12*y,fv(mes,p,12*y),fv(mes,t,12*y)]);
+  const max=Math.max(...pts.map(x=>x[3]))||1;
+  const X=y=>pad+(W-pad-10)*y/anos,Y=v=>H-26-(H-40)*v/max;
+  const line=(i,col)=>`<polyline fill="none" stroke="${col}" stroke-width="3" stroke-linejoin="round" points="${pts.map(q=>X(q[0])+','+Y(q[i])).join(' ')}"/>`;
+  let grid='';for(let k=0;k<=4;k++){const v=max*k/4;grid+=`<line x1="${pad}" x2="${W-10}" y1="${Y(v)}" y2="${Y(v)}" stroke="#e3ebe6"/><text x="${pad-6}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="#6b7c73">${v>=1000?(v/1000).toFixed(v>=10000?0:1)+'k':Math.round(v)}</text>`;}
+  const step=Math.ceil(anos/8);let xl='';for(let y=0;y<=anos;y+=step)xl+=`<text x="${X(y)}" y="${H-8}" text-anchor="middle" font-size="11" fill="#6b7c73">${y}${l.yr}</text>`;
+  $('chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%">${grid}${xl}${line(1,'#9aa8a0')}${line(2,'#f5b623')}${line(3,'#14a36b')}<circle cx="${X(anos)}" cy="${Y(pts[anos][3])}" r="5" fill="#14a36b"/></svg>`;
+}
+['sMes','sAnos','sPoup','sTes'].forEach(i=>$(i).oninput=sim);
+
+// quiz: 5 perguntas por dia, rodando pelas 40 sem repetir por 8 dias
+function rng(seed){return()=>{seed=(seed*1664525+1013904223)%4294967296;return seed/4294967296;};}
+function embaralha(a,r){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor((r||Math.random)()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const dia=Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);
+const ciclo=Math.floor(dia/8),bloco=dia%8;
+const ordemCiclo=embaralha(embaralha(BANCO.pt.map((_,i)=>i),rng(2026)),rng(2026+ciclo));
+let Q=[],qi=0,score=0;
+function montaQuiz(){
+  Q=ordemCiclo.slice(bloco*5,bloco*5+5).map(i=>{const[q,c,w1,w2,e]=BANCO[LANG][i];const o=embaralha([c,w1,w2]);return[q,o,o.indexOf(c),e];});
+}
+function quiz(){
+  const l=L();
+  if(qi>=Q.length){$('qProg').textContent='';$('quiz').innerHTML=`<div class="big" style="text-align:center;margin:10px 0">${score}/${Q.length}</div><div style="text-align:center">${score===Q.length?l.perfect:score>=3?l.good:l.tryAgain}</div><div class="mute" style="text-align:center;margin-top:6px">${l.tomorrow}</div><button class="btn" onclick="qi=0;score=0;montaQuiz();quiz()">${l.playAgain}</button>`;return;}
+  const[q,o,c,e]=Q[qi];$('qProg').textContent=l.qProg(qi+1,Q.length,score);
+  $('quiz').dataset.done='0';
+  $('quiz').innerHTML=`<div style="font-weight:800;font-size:16px;margin-top:6px">${q}</div>`+o.map((t,i)=>`<button class="quizopt" data-i="${i}">${t}</button>`).join('')+'<div id="qe"></div>';
+  $('quiz').querySelectorAll('.quizopt').forEach(b=>b.onclick=()=>{
+    if($('quiz').dataset.done==='1')return;$('quiz').dataset.done='1';
+    const i=+b.dataset.i;if(i===c)score++;
+    $('quiz').querySelectorAll('.quizopt').forEach((x,j)=>{if(j===c)x.classList.add('ok');else if(j===i)x.classList.add('no');});
+    $('qe').innerHTML=`<div class="tip">${i===c?l.right:l.almost} ${e}</div><button class="btn" id="qn">${qi+1<Q.length?l.next:l.result}</button>`;
+    $('qn').onclick=()=>{qi++;quiz();};
+  });
+}
+
+function dica(){$('dica').textContent=DICAS[LANG][(new Date().getDate()-1)%DICAS[LANG].length];}
+function dic(){$('dic').innerHTML=DIC[LANG].map(([a,b])=>`<div class="item" style="display:block"><b>${a}</b><div class="mute" style="font-size:14px">${b}</div></div>`).join('');}
+
+// apagar dados
+$('reset').onclick=()=>{$('reset').style.display='none';$('resetConfirm').style.display='block';};
+$('resetNo').onclick=()=>{$('reset').style.display='block';$('resetConfirm').style.display='none';};
+$('resetYes').onclick=()=>{S={mov:[],goals:[]};save();render();$('resetNo').onclick();toast(L().dataDeleted);};
+
+applyLang();save();
+
+</script>
+</body>
+</html>
